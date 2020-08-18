@@ -13,7 +13,7 @@ public class BruteForceCoding {
 
     public static String byteArrayToDecimalString(byte[] bArray) {
         StringBuilder rtn = new StringBuilder();
-        for( byte b : bArray) {
+        for (byte b : bArray) {
             rtn.append(b & BYTEMASK).append(" ");
         }
         return rtn.toString();
@@ -30,7 +30,7 @@ public class BruteForceCoding {
     // Warning: Untested preconditions (e.g., 0 <= size <= 8)
     public static long decodeIntBigEndian(byte[] val, int offset, int size) {
         long rtn = 0;
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             rtn = (rtn << Byte.SIZE) | ((long) val[offset + i] & BYTEMASK);
         }
         return rtn;
@@ -39,13 +39,22 @@ public class BruteForceCoding {
     public static void main(String[] args) {
         byte[] message = new byte[BSIZE + SSIZE + ISIZE + LSIZE];
         // Encode the fields in the target byte array
-        int offset = encodeIntBigEndian(message, byteVal, 0 , BSIZE);
+        int offset = encodeIntBigEndian(message, byteVal, 0, BSIZE);
         offset = encodeIntBigEndian(message, shortVal, offset, SSIZE);
         offset = encodeIntBigEndian(message, intVal, offset, ISIZE);
         encodeIntBigEndian(message, longVal, offset, LSIZE);
         System.out.println("Encoded message: " + byteArrayToDecimalString(message));
 
-        
+        // Decode several fields
+        long value = decodeIntBigEndian(message, offset, BSIZE);
+        System.out.println("Decoded long = " + value);
+
+        // Demonstrate dangers of conversion
+        offset = 4;
+        value = decodeIntBigEndian(message, offset, BSIZE);
+        System.out.println("Decoded value (offset " + offset + ", size " + BSIZE + ") = " + value);
+        byte bVal = (byte) decodeIntBigEndian(message, offset, BSIZE);
+        System.out.println("Same value as byte = " + bVal);
     }
 
 }
