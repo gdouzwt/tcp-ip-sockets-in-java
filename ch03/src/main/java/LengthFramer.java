@@ -1,7 +1,4 @@
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 public class LengthFramer implements Framer {
 
@@ -12,8 +9,8 @@ public class LengthFramer implements Framer {
 
     private DataInputStream in;  // wrapper for data I/O
 
-    public LengthFramer(DataInputStream in) {
-        this.in = in;
+    public LengthFramer(InputStream in) {
+        this.in = new DataInputStream(in);
     }
 
     @Override
