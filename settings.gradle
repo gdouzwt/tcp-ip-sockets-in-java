@@ -10,4 +10,5 @@
 rootProject.name = 'tcp-ip-sockets-in-java'
 include 'ch01'
 include 'ch02'
+include 'ch03'
 
