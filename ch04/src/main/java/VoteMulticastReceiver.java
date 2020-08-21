@@ -2,39 +2,34 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.util.Arrays;
 
 public class VoteMulticastReceiver {
+    private static final String GATEWAY = "224.0.0.50"; // 网关 UDP 组播地址
+    private static int PORT = 9898;
+
 
     public static void main(String[] args) throws IOException {
 
-        if (args.length != 2) { // Test for correct # of args
-            throw new IllegalArgumentException("Parameter(s): <Multicast Addr> <Port>");
-        }
-
-        InetAddress address = InetAddress.getByName(args[0]); // Multicast address
+        InetAddress address = InetAddress.getByName(GATEWAY); // Multicast address
         if (!address.isMulticastAddress()) { // Test if multicast address
             throw new IllegalArgumentException("Not a multicast address");
         }
 
-        int port = Integer.parseInt(args[1]); // Multicast port
-        MulticastSocket sock = new MulticastSocket(port); // for receiving
+        MulticastSocket sock = new MulticastSocket(PORT); // for receiving
         sock.joinGroup(address); // Join the multicast group
 
-        VoteMsgTextCoder coder = new VoteMsgTextCoder();
+//        String hostAddress = address.getHostAddress();
+//        System.out.println(hostAddress);
 
         // Receive a datagram
-        DatagramPacket packet = new DatagramPacket(new byte[VoteMsgTextCoder.MAX_WIRE_LENGTH],
-            VoteMsgTextCoder.MAX_WIRE_LENGTH);
+        DatagramPacket packet = new DatagramPacket(new byte[136],
+            136);
         sock.receive(packet);
-
-        VoteMsg vote = coder.fromWire(Arrays.copyOfRange(packet.getData(), 0, packet
-            .getLength()));
 
         System.out.println("Received Text-Encoded Request (" + packet.getLength()
             + " bytes): ");
-        System.out.println(vote);
-
+        String content = new String(packet.getData());
+        System.out.println(content);
         sock.close();
     }
 }

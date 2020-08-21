@@ -1,3 +1,9 @@
 plugins {
     id 'java'
 }
+/*tasks.withType(JavaCompile){
+    options.encoding = "GBK"
+}*/
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
